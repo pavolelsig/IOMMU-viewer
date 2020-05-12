@@ -34,7 +34,11 @@ echo "Please be patient. This may take a couple seconds."
 		echo -n " $l "
 
 		#Outputting the name and id
-		echo "`lspci -nn | grep $j | cut -d ' ' -f 2-`"
+		echo -n "`lspci -nn | grep $j | cut -d ' ' -f 2-`"
+		
+		#Outputting the kernel driver in use
+		echo "`lspci -k -s $j | grep "Kernel driver in use"`" | cut -d ':' -f 2
+
 
 	#The output is sorted numerically based on the second space-separated field.
 	done | sort -nk2
