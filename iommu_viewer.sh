@@ -19,10 +19,13 @@ echo "Please be patient. This may take a couple seconds."
 
 		#J holds the part of the address that's pasted into lspci to get the name
 		j=`echo $i | cut -d ':' -f 2,3,4`
-	
+		
+		#M holds the kernel driver in use
+		m=`lspci -k -s $j | grep "Kernel driver in use"`
+		
 		echo -n  "Group: "
 
-		#This if statement is here for proper allignment. If group is less that 10 a space is added.
+		#This if-statement is here for proper alignment. If group is less than 10, a space is added.
 		if [ $k -lt 10 ]
 			then
 				echo -n " $k  "
@@ -36,8 +39,14 @@ echo "Please be patient. This may take a couple seconds."
 		#Outputting the name and id
 		echo -n "`lspci -nn | grep $j | cut -d ' ' -f 2-`"
 		
+		#Only displays "   Driver:" if m is not an empty string
+		if ! [ -z "$m" ]
+			then
+				echo -n "   Driver:"
+		fi
+		
 		#Outputting the kernel driver in use
-		echo "`lspci -k -s $j | grep "Kernel driver in use"`" | cut -d ':' -f 2
+		echo "$m" | cut -d ':' -f 2
 
 
 	#The output is sorted numerically based on the second space-separated field.
